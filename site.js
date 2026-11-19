@@ -158,24 +158,51 @@
     });
 
 
-    // Homepage hero slideshow: crossfade, lazy-load the later slides, pause when hidden
+    // Homepage hero slideshow: each photo rolls up to the next in 3D (the theme CSS draws it),
+    // the picture tilts towards the mouse, later slides lazy-load, and it pauses when hidden
     var heroShow = document.querySelector('[data-hero-slideshow]');
     if (heroShow) {
         var slides = Array.prototype.slice.call(heroShow.querySelectorAll('.hero-slide'));
         var dots = Array.prototype.slice.call(document.querySelectorAll('.hero-dots button'));
         var cur = 0, timer = null;
         var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        var heroBox = heroShow.closest('.hero') || heroShow;
         function load(el) {
             if (el.dataset.srcset) { el.srcset = el.dataset.srcset; delete el.dataset.srcset; }
         }
+        // The cube turns around its centre, half the slideshow's height behind the photo
+        function setDepth() { heroShow.style.setProperty('--cube-d', Math.round(heroShow.offsetHeight / 2) + 'px'); }
+        setDepth();
+        window.addEventListener('resize', setDepth);
+        slides.forEach(function (s) {
+            s.addEventListener('animationend', function () { s.classList.remove('is-leaving', 'is-entering'); });
+        });
         function go(n) {
             n = (n + slides.length) % slides.length;
+            if (n === cur) return;
             load(slides[n]); load(slides[(n + 1) % slides.length]);
+            slides.forEach(function (s) { s.classList.remove('is-leaving', 'is-entering'); });
             slides[cur].classList.remove('is-active');
+            if (!reduce) slides[cur].classList.add('is-leaving');
             if (dots[cur]) dots[cur].removeAttribute('aria-current');
             cur = n;
             slides[cur].classList.add('is-active');
+            if (!reduce) slides[cur].classList.add('is-entering');
             if (dots[cur]) dots[cur].setAttribute('aria-current', 'true');
+        }
+        // Tilt towards the mouse (computers only)
+        if (!reduce && window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+            heroBox.addEventListener('pointermove', function (e) {
+                var r = heroBox.getBoundingClientRect();
+                var x = (e.clientX - r.left) / r.width - 0.5;
+                var y = (e.clientY - r.top) / r.height - 0.5;
+                heroShow.style.setProperty('--tilt-y', (x * 10).toFixed(2) + 'deg');
+                heroShow.style.setProperty('--tilt-x', (y * -7).toFixed(2) + 'deg');
+            });
+            heroBox.addEventListener('pointerleave', function () {
+                heroShow.style.setProperty('--tilt-y', '0deg');
+                heroShow.style.setProperty('--tilt-x', '0deg');
+            });
         }
         function start() { stop(); if (!reduce) timer = setInterval(function () { go(cur + 1); }, 6000); }
         function stop() { if (timer) clearInterval(timer); timer = null; }

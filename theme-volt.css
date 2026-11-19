@@ -378,6 +378,68 @@ a {
     background: var(--volt);
 }
 
+/* Home slideshow in 3D: the picture slowly sways and turns, tilts towards the mouse,
+   and each photo rolls up to the next like the faces of a turning cube.
+   site.js sets --cube-d (half the slideshow height), --tilt-x / --tilt-y and the
+   is-entering / is-leaving classes. */
+.hero--home {
+    perspective: 1500px;
+    perspective-origin: 50% 40%;
+}
+.hero--home .hero-slides {
+    transform-style: preserve-3d;
+    scale: 1.14;
+    transform: rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
+    transition: transform 900ms cubic-bezier(0.22, 1, 0.36, 1);
+    animation: hero-orbit 16s ease-in-out infinite alternate;
+}
+@keyframes hero-orbit {
+    0%   { rotate: y -7deg; translate: -1.5% 0 0; }
+    50%  { rotate: x 3deg; translate: 0 -1% 0; }
+    100% { rotate: y 7deg; translate: 1.5% 0 0; }
+}
+.hero--home .hero-slide {
+    opacity: 0;
+    transform: none;
+    transform-origin: 50% 50% calc(var(--cube-d, 320px) * -1);
+    transition: none;
+    backface-visibility: hidden;
+}
+.hero--home .hero-slide.is-active,
+.hero--home .hero-slide.is-leaving {
+    opacity: 1;
+}
+.hero--home .hero-slide.is-leaving {
+    z-index: 1;
+    animation: hero-cube-out 1.5s cubic-bezier(0.7, 0, 0.3, 1) forwards;
+}
+.hero--home .hero-slide.is-entering {
+    z-index: 2;
+    animation: hero-cube-in 1.5s cubic-bezier(0.7, 0, 0.3, 1) forwards;
+}
+@keyframes hero-cube-out {
+    from { transform: rotateX(0deg); filter: brightness(1); }
+    to   { transform: rotateX(90deg); filter: brightness(0.35); }
+}
+@keyframes hero-cube-in {
+    from { transform: rotateX(-90deg); filter: brightness(0.35); }
+    to   { transform: rotateX(0deg); filter: brightness(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+    .hero--home .hero-slides {
+        scale: 1;
+        transform: none;
+        animation: none;
+    }
+    .hero--home .hero-slide.is-leaving,
+    .hero--home .hero-slide.is-entering {
+        animation: none;
+    }
+    .hero--home .hero-slide.is-leaving {
+        opacity: 0;
+    }
+}
+
 /* Pages that open with a content card: its first heading becomes a big page title */
 .page-content > .content-card:first-child > h2:first-child,
 .page-content > .content-card:first-child > h2:first-of-type {
@@ -484,12 +546,16 @@ img {
 
 /* Quick facts: huge volt numbers */
 .fact {
+    container-type: inline-size;
+    min-width: 0;
     padding: 22px 20px;
 }
 .fact strong {
     color: var(--volt);
     font-family: var(--font-sans);
-    font-size: clamp(34px, 4.4vw, 56px);
+    /* Sized to the box as well as the screen, so long words such as "agreement" stay inside it */
+    font-size: min(clamp(34px, 4.4vw, 56px), 17cqi);
+    overflow-wrap: break-word;
     font-weight: 800;
     letter-spacing: -0.03em;
     line-height: 0.95;
@@ -747,7 +813,14 @@ img {
         transform: translateY(14%);
     }
     .fact strong {
-        font-size: 34px;
+        font-size: min(34px, 17cqi);
+    }
+}
+
+/* Small phones: one fact per row, so the big numbers and words keep their size */
+@media (max-width: 480px) {
+    .fact-grid {
+        grid-template-columns: 1fr;
     }
 }
 
