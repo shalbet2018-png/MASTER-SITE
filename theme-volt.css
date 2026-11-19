@@ -1,0 +1,771 @@
+/* Moke Gardens master-site: "volt" theme.
+   Dark olive pages with drifting contour lines, cream panels, a volt-lime accent,
+   heavy uppercase Mona Sans headings with serif accent words, and small square-cornered buttons.
+   Loaded after property-pages.css, which keeps the layout; this file sets the look.
+   Each page sets body.page-* to shift the accent and background slightly (see the end of the file). */
+
+:root {
+    color-scheme: dark;
+
+    /* Theme palette */
+    --volt: #D2FF00;
+    --volt-rgb: 210, 255, 0;
+    --olive: #282C20;
+    --olive-rgb: 40, 44, 32;
+    --olive-2: #31362A;
+    --olive-3: #3B4133;
+    --cream: #F4F4ED;
+    --cream-rgb: 244, 244, 237;
+    --sage: #B4B8A5;
+    --sage-light: #DDE1D2;
+    --ink: #111112;
+    --font-sans: "Mona Sans", "Helvetica Neue", Arial, sans-serif;
+    --font-serif: "Instrument Serif", Georgia, "Times New Roman", serif;
+    --radius: 6px;
+}
+
+/* The base stylesheet's variables, mapped onto the theme. Declared on body too, so the
+   per-page palettes at the end of this file reach everything that uses the base names. */
+:root,
+body {
+    --moke-blue: var(--olive);
+    --moke-blue-rgb: var(--olive-rgb);
+    --moke-navy: var(--olive-2);
+    --moke-deep-navy: var(--olive);
+    --moke-gold: var(--volt);
+    --moke-light-gold: var(--volt);
+    --moke-text: var(--cream);
+    --moke-muted: var(--sage);
+    --moke-white: var(--sage-light);
+    --surface-1: var(--olive-2);
+    --surface-2: var(--olive-3);
+    --surface-hover: #22261B;
+    --stage: #1C1F16;
+    --shade-rgb: 24, 27, 19;
+    --shade-deep-rgb: 14, 16, 11;
+    --ink-rgb: 17, 17, 18;
+    --gold-rgb: var(--volt-rgb);
+    --light-gold-rgb: var(--cream-rgb);
+    --glow-rgb: var(--volt-rgb);
+}
+
+/* ---------- Page and type ---------- */
+
+body {
+    background: var(--olive);
+    color: var(--sage-light);
+    font-family: var(--font-sans);
+    font-size: 16px;
+    line-height: 1.6;
+    transition: background-color 400ms ease;
+}
+
+/* Drifting topographic contour lines (replace the old orbiting lines) */
+body::before,
+body::after {
+    inset: -20vmax;
+    opacity: 1;
+    mix-blend-mode: normal;
+    background: url("images/contours.svg") center / 1600px 1600px repeat;
+}
+body::before {
+    opacity: 0.07;
+    animation: volt-contour-drift 120s linear infinite alternate;
+}
+body::after {
+    opacity: 0.035;
+    background-size: 2300px 2300px;
+    animation: volt-contour-drift-2 160s linear infinite alternate;
+}
+@keyframes volt-contour-drift {
+    from { transform: translate3d(0, 0, 0) rotate(0deg); }
+    to { transform: translate3d(-4%, 3%, 0) rotate(4deg); }
+}
+@keyframes volt-contour-drift-2 {
+    from { transform: translate3d(0, 0, 0) rotate(0deg); }
+    to { transform: translate3d(3%, -4%, 0) rotate(-5deg); }
+}
+
+h1, h2, h3,
+.content-card h2, .content-card h3,
+.section-head h2, .listing-body h3, .feature-card h2 {
+    font-family: var(--font-sans);
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: -0.025em;
+    line-height: 0.98;
+}
+
+/* Serif accent words, set in volt like the reference's mixed headlines */
+.serif {
+    font-family: var(--font-serif);
+    font-weight: 400;
+    font-style: normal;
+    letter-spacing: -0.01em;
+    color: var(--volt);
+    text-transform: uppercase;
+}
+
+/* Small uppercase labels ("eyebrows") */
+.hero-copy p:not(.hero-lead),
+.section-head p,
+.listing-tag,
+.render-label {
+    font-family: var(--font-sans);
+    font-weight: 600;
+    letter-spacing: 0.12em;
+}
+
+a {
+    text-underline-offset: 3px;
+}
+
+::selection {
+    background: var(--volt);
+    color: var(--olive);
+}
+
+:focus-visible {
+    outline: 2px solid var(--volt);
+    outline-offset: 3px;
+}
+
+/* ---------- Header ---------- */
+
+.site-header {
+    border-bottom: 1px solid rgba(var(--cream-rgb), 0.1);
+    background: rgba(var(--olive-rgb), 0.82);
+    box-shadow: none;
+    backdrop-filter: blur(14px);
+}
+.header-inner {
+    width: min(1280px, calc(100% - 40px));
+    min-height: 72px;
+}
+.brand {
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: none;
+    box-shadow: none;
+}
+.brand img {
+    width: 104px;
+}
+
+/* Volt "Inquire" button next to the menu, like the reference's Store button */
+.header-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    height: 40px;
+    margin-left: auto;
+    padding: 0 14px;
+    border: 1px solid var(--volt);
+    border-radius: var(--radius);
+    background: var(--volt);
+    color: var(--olive);
+    font: 700 13px/1 var(--font-sans);
+    letter-spacing: 0.08em;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: background-color 180ms ease, color 180ms ease;
+}
+.header-cta svg {
+    width: 15px;
+    height: 15px;
+}
+.header-cta:hover,
+.header-cta:focus-visible {
+    background: var(--cream);
+    border-color: var(--cream);
+}
+
+/* Menu button: outlined square-cornered box */
+.nav-toggle {
+    height: 40px;
+    padding: 0 14px;
+    border: 1px solid rgba(var(--cream-rgb), 0.55);
+    border-radius: var(--radius);
+    background: transparent;
+    color: var(--cream);
+    font: 700 13px/1 var(--font-sans);
+    letter-spacing: 0.1em;
+    box-shadow: none;
+}
+.nav-toggle:hover,
+.nav-toggle:focus-visible {
+    border-color: var(--cream);
+    background: rgba(var(--cream-rgb), 0.08);
+}
+.nav-toggle[aria-expanded="true"] {
+    border-color: var(--cream);
+    background: var(--cream);
+    color: var(--olive);
+}
+
+/* Menu panel: a cream sheet with big uppercase links */
+.site-nav {
+    width: min(420px, calc(100vw - 24px));
+    padding: 14px;
+    border: 0;
+    border-radius: var(--radius);
+    background: var(--cream);
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.45);
+}
+.site-nav a,
+.site-nav summary {
+    padding: 10px 12px;
+    border-radius: 4px;
+    color: var(--olive);
+    font-family: var(--font-sans);
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    line-height: 1.1;
+}
+.site-nav summary::after {
+    color: var(--olive);
+}
+.site-nav a:hover,
+.site-nav a:focus-visible,
+.site-nav summary:hover,
+.site-nav summary:focus-visible,
+.site-nav details[open] > summary {
+    background: rgba(var(--olive-rgb), 0.08);
+    color: var(--olive);
+}
+.site-nav a[aria-current="page"] {
+    background: var(--volt);
+    color: var(--olive);
+}
+.nav-dropdown {
+    border-left: 2px solid var(--olive);
+}
+.nav-dropdown a {
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+}
+
+/* ---------- Buttons ---------- */
+
+.btn,
+.content-card a.btn {
+    min-height: 44px;
+    padding: 10px 18px;
+    border: 1px solid rgba(var(--cream-rgb), 0.6);
+    border-radius: var(--radius);
+    background: transparent;
+    color: var(--cream);
+    font-family: var(--font-sans);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+.btn:hover,
+.btn:focus-visible,
+.content-card a.btn:hover,
+.content-card a.btn:focus-visible {
+    border-color: var(--cream);
+    background: var(--cream);
+    color: var(--olive);
+    transform: none;
+}
+.btn-gold,
+.content-card a.btn-gold {
+    border-color: var(--volt);
+    background: var(--volt);
+    color: var(--olive);
+}
+.btn-gold:hover,
+.btn-gold:focus-visible,
+.content-card a.btn-gold:hover,
+.content-card a.btn-gold:focus-visible {
+    border-color: var(--cream);
+    background: var(--cream);
+    color: var(--olive);
+}
+.btn-whatsapp,
+.contact-links a.btn-whatsapp {
+    border-color: var(--volt);
+    background: transparent;
+    color: var(--cream);
+}
+.btn-whatsapp svg {
+    color: var(--volt);
+}
+.btn-whatsapp:hover svg,
+.btn-whatsapp:focus-visible svg {
+    color: var(--olive);
+}
+.contact-links a,
+.content-card .contact-links a {
+    min-height: 44px;
+    border: 1px solid rgba(var(--cream-rgb), 0.6);
+    border-radius: var(--radius);
+    background: transparent;
+    color: var(--cream);
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+.contact-links a:hover,
+.contact-links a:focus-visible,
+.contact-links a.btn-whatsapp:hover,
+.contact-links a.btn-whatsapp:focus-visible,
+.content-card .contact-links a:hover,
+.content-card .contact-links a:focus-visible {
+    border-color: var(--cream);
+    background: var(--cream);
+    color: var(--olive);
+}
+
+/* Floating Call + WhatsApp buttons: square-cornered volt and cream */
+.fab-stack .btn {
+    border-radius: var(--radius);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.4);
+    animation: none;
+}
+.fab-stack .btn-whatsapp {
+    border: 1px solid var(--volt);
+    background: var(--volt);
+    color: var(--olive);
+    animation: none;
+}
+.fab-stack .btn-whatsapp svg {
+    color: var(--olive);
+}
+.fab-stack .call-fab {
+    border: 1px solid var(--cream);
+    background: var(--cream);
+    color: var(--olive);
+}
+
+/* ---------- Page width and hero ---------- */
+
+.page-content {
+    width: min(1200px, calc(100% - 32px));
+}
+
+.hero {
+    border: 0;
+    border-radius: var(--radius);
+    background: var(--stage);
+    box-shadow: none;
+    animation: none;
+}
+.hero-copy,
+.hero--home .hero-copy {
+    background: linear-gradient(0deg, rgba(var(--olive-rgb), 0.96) 8%, rgba(var(--olive-rgb), 0.6) 55%, transparent);
+}
+.hero-copy p:not(.hero-lead) {
+    color: var(--volt);
+    font-size: 12px;
+}
+.hero-copy h1 {
+    font-size: clamp(42px, 8vw, 104px);
+    line-height: 0.9;
+    text-shadow: none;
+}
+.hero-copy .hero-lead {
+    max-width: 600px;
+    color: var(--sage-light);
+    font-size: clamp(15px, 1.6vw, 18px);
+}
+.hero-dots button[aria-current="true"] {
+    background: var(--volt);
+}
+
+/* Pages that open with a content card: its first heading becomes a big page title */
+.page-content > .content-card:first-child > h2:first-child,
+.page-content > .content-card:first-child > h2:first-of-type {
+    margin-bottom: 22px;
+    color: var(--cream);
+    font-size: clamp(40px, 7.4vw, 96px);
+    line-height: 0.9;
+}
+
+/* ---------- Cards and frames ---------- */
+
+.content-card,
+.feature-card,
+.fact,
+.listing-card {
+    border: 1px solid rgba(var(--cream-rgb), 0.12);
+    border-radius: var(--radius);
+    background: rgba(var(--olive-rgb), 0.72);
+    box-shadow: none;
+    animation: none;
+    backdrop-filter: blur(2px);
+}
+.content-card {
+    margin-top: 28px;
+}
+.content-card h2 {
+    color: var(--cream);
+    font-size: clamp(30px, 4.6vw, 58px);
+}
+.content-card h3,
+.listing-body h3 {
+    color: var(--cream);
+    font-size: clamp(20px, 2.2vw, 28px);
+}
+.content-card p,
+.feature-card p,
+.feature-card ul,
+.listing-body p,
+.intro p,
+.media-note {
+    color: var(--sage-light);
+}
+.content-card a,
+.content-card p a:not(.btn),
+.content-card li a:not(.btn),
+.tour-book-alt a {
+    color: var(--volt);
+}
+.content-card p a:not(.btn):hover,
+.content-card li a:not(.btn):hover,
+.tour-book-alt a:hover {
+    color: var(--cream);
+}
+.feature-card h2 {
+    color: var(--volt);
+    font-size: clamp(22px, 2.4vw, 30px);
+}
+.feature-card li::marker {
+    color: var(--volt);
+}
+
+.value-card,
+.price-item,
+.gallery-grid figure,
+.tour-facts,
+.contact-person {
+    border: 1px solid rgba(var(--cream-rgb), 0.14);
+    border-radius: var(--radius);
+    background: rgba(var(--cream-rgb), 0.04);
+    box-shadow: none;
+    animation: none;
+}
+.value-card h2,
+.value-card h3 {
+    color: var(--volt);
+}
+
+.media-frame,
+.tour-view,
+.room-tour-stage,
+.showcase-stage {
+    border: 1px solid rgba(var(--cream-rgb), 0.14);
+    border-radius: var(--radius);
+    background: var(--stage);
+    box-shadow: none;
+    animation: none;
+}
+
+img {
+    border-radius: 0;
+}
+.intro img,
+.split img,
+.listing-card img,
+.gallery-grid img,
+.why-photo,
+.tour-aside figure img,
+.room-tour-rooms img {
+    border-radius: 3px;
+}
+.listing-card img {
+    border-radius: 0;
+}
+
+/* Quick facts: huge volt numbers */
+.fact {
+    padding: 22px 20px;
+}
+.fact strong {
+    color: var(--volt);
+    font-family: var(--font-sans);
+    font-size: clamp(34px, 4.4vw, 56px);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 0.95;
+}
+.fact span {
+    color: var(--sage);
+    font-size: 13px;
+}
+
+/* Section heading on the page background */
+.section-head {
+    margin-top: 72px;
+}
+.section-head p {
+    color: var(--volt);
+    font-size: 12px;
+}
+.section-head h2 {
+    color: var(--cream);
+    font-size: clamp(38px, 6.6vw, 88px);
+    line-height: 0.92;
+}
+
+/* Listing cards */
+.listing-tag {
+    border-radius: 4px;
+    background: var(--volt);
+    color: var(--olive);
+    font-size: 11px;
+}
+.listing-price {
+    color: var(--volt);
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+}
+
+/* ---------- Cream panels (light sections, as in the reference) ---------- */
+
+.pricing,
+.cta-band {
+    border-color: transparent;
+    background: var(--cream);
+    color: var(--olive);
+}
+.pricing h2,
+.cta-band h2,
+.pricing p,
+.cta-band p,
+.pricing-intro {
+    color: var(--olive);
+}
+.pricing .serif,
+.cta-band .serif {
+    color: var(--olive);
+}
+.pricing .price-item {
+    border: 1px solid rgba(var(--olive-rgb), 0.2);
+    background: transparent;
+    color: var(--olive);
+}
+.pricing .price-item span {
+    color: rgba(var(--olive-rgb), 0.75);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+.pricing .price-item strong {
+    color: var(--olive);
+    font-size: clamp(21px, 2.2vw, 28px);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    white-space: nowrap;
+}
+.cta-band {
+    padding-block: clamp(36px, 6vw, 72px);
+}
+.cta-band h2 {
+    font-size: clamp(36px, 6.4vw, 84px);
+}
+.cta-band .btn,
+.cta-band a.btn,
+.cta-band .btn-whatsapp {
+    border-color: var(--olive);
+    background: transparent;
+    color: var(--olive);
+}
+.cta-band .btn-gold,
+.cta-band a.btn-gold {
+    border-color: var(--olive);
+    background: var(--olive);
+    color: var(--cream);
+}
+.cta-band .btn-whatsapp svg {
+    color: var(--olive);
+}
+.cta-band .btn:hover,
+.cta-band .btn:focus-visible,
+.cta-band a.btn:hover,
+.cta-band a.btn:focus-visible {
+    border-color: var(--volt);
+    background: var(--volt);
+    color: var(--olive);
+}
+.cta-band .btn:hover svg {
+    color: var(--olive);
+}
+
+/* ---------- Footer: cream with a giant wordmark ---------- */
+
+.site-footer {
+    position: relative;
+    overflow: hidden;
+    margin-top: 72px;
+    padding: 48px 20px 0;
+    border-top: 0;
+    background: var(--cream);
+    color: var(--olive);
+}
+.site-footer::before {
+    display: none;
+}
+.site-footer nav {
+    gap: 8px 28px;
+    margin-bottom: 18px;
+}
+.site-footer a {
+    color: var(--olive);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+.site-footer a:hover {
+    color: var(--olive);
+    text-decoration: underline;
+    text-decoration-color: var(--olive);
+}
+.site-footer p {
+    color: rgba(var(--olive-rgb), 0.75);
+    font-size: 13px;
+}
+.site-footer::after {
+    display: block;
+    width: 100%;
+    margin-top: 28px;
+    content: "Moke Gardens";
+    color: var(--olive);
+    /* "MOKE GARDENS" is about 7.95 times its font size wide, so this fills the width without overflowing */
+    font: 800 min(calc((100vw - 56px) / 8.1), 190px)/0.8 var(--font-sans);
+    letter-spacing: -0.045em;
+    text-align: center;
+    text-transform: uppercase;
+    white-space: nowrap;
+    transform: translateY(12%);
+}
+
+/* ---------- Galleries, tours, slideshow, lightbox ---------- */
+
+.content-card .jump-links a,
+.content-card .tour-switch a {
+    border-radius: 4px;
+    font-family: var(--font-sans);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+.content-card .jump-links + h3 {
+    margin-top: 30px;
+}
+.content-card[id],
+.feature-grid[id] {
+    scroll-margin-top: 90px;
+}
+.content-card .tour-switch a[aria-current="page"] {
+    border-color: var(--volt);
+    background: var(--volt);
+    color: var(--olive);
+}
+.gallery-grid figcaption {
+    color: var(--sage);
+    font-size: 13px;
+}
+.render-label {
+    border-radius: 4px;
+    background: rgba(var(--olive-rgb), 0.82);
+    color: var(--cream);
+}
+.room-tour-arrow,
+.showcase-arrow,
+.showcase-toggle,
+.tour-btn,
+.lightbox button {
+    border-radius: var(--radius);
+}
+.room-tour-progress span,
+.showcase-progress span {
+    background: var(--volt);
+}
+.room-tour-rooms button[aria-current="true"],
+.tour-rooms button[aria-current="true"],
+.showcase-dots button[aria-current="true"] {
+    border-color: var(--volt);
+}
+.showcase-dots button[aria-current="true"] {
+    background: var(--volt);
+}
+.content-card .room-tour-count {
+    color: var(--volt);
+}
+.lightbox {
+    background: rgba(var(--olive-rgb), 0.96);
+}
+.partner-logo {
+    border-radius: var(--radius);
+}
+
+/* ---------- Phones ---------- */
+
+@media (max-width: 700px) {
+    .header-inner {
+        width: calc(100% - 24px);
+        min-height: 64px;
+    }
+    .brand img {
+        width: 86px;
+    }
+    .header-cta {
+        height: 38px;
+        padding: 0 11px;
+        font-size: 12px;
+    }
+    .header-cta span {
+        display: none;
+    }
+    .nav-toggle {
+        height: 38px;
+        padding: 0 12px;
+    }
+    .site-nav {
+        width: 100%;
+    }
+    .site-nav a,
+    .site-nav summary {
+        font-size: 19px;
+    }
+    .site-footer {
+        padding-bottom: 0;
+    }
+    .site-footer::after {
+        margin-bottom: 0;
+        transform: translateY(14%);
+    }
+    .fact strong {
+        font-size: 34px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    body::before,
+    body::after {
+        animation: none;
+    }
+}
+
+/* ---------- Per-page variants: a little different on each page ----------
+   The accent and the background shift slightly, so each page has its own tone
+   without leaving the theme. */
+
+body.page-home        { --volt: #D2FF00; --volt-rgb: 210, 255, 0;   --olive: #282C20; --olive-rgb: 40, 44, 32; --olive-2: #31362A; --olive-3: #3B4133; }
+body.page-apartments  { --volt: #C2FF3A; --volt-rgb: 194, 255, 58;  --olive: #24301F; --olive-rgb: 36, 48, 31; --olive-2: #2D3A27; --olive-3: #374532; }
+body.page-maisonettes { --volt: #E6F700; --volt-rgb: 230, 247, 0;   --olive: #2D2C1F; --olive-rgb: 45, 44, 31; --olive-2: #373527; --olive-3: #423F30; }
+body.page-why         { --volt: #B6FF63; --volt-rgb: 182, 255, 99;  --olive: #222B22; --olive-rgb: 34, 43, 34; --olive-2: #2B352B; --olive-3: #354035; }
+body.page-tour        { --volt: #D8FF2E; --volt-rgb: 216, 255, 46;  --olive: #252A22; --olive-rgb: 37, 42, 34; --olive-2: #2E342B; --olive-3: #383F35; }
+body.page-gallery     { --volt: #CCFF1A; --volt-rgb: 204, 255, 26;  --olive: #2A2C24; --olive-rgb: 42, 44, 36; --olive-2: #33362D; --olive-3: #3D4137; }
+body.page-contact     { --volt: #DDFF4F; --volt-rgb: 221, 255, 79;  --olive: #2B2E1E; --olive-rgb: 43, 46, 30; --olive-2: #343828; --olive-3: #3F4332; }
