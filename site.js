@@ -313,10 +313,11 @@
     var bookingNote = document.querySelector('[data-booking-note]');
     if (bookingNote) {
         var UNITS = {
-            'studio': 'studio apartment (24 sq.m, Kshs 1,800,000)',
-            '1-bedroom': '1 bedroom apartment (44 sq.m, Kshs 3,500,000)',
-            '2-bedroom': '2 bedroom apartment (70 sq.m, Kshs 5,000,000)',
-            '3-bedroom': '3 bedroom apartment (102 sq.m, Kshs 8,000,000)'
+            'studio': 'studio apartment (24 sq.m, Kshs 2,040,000)',
+            'compact-1-bedroom': 'compact 1 bedroom apartment (30 sq.m, Kshs 2,400,000)',
+            '1-bedroom': 'standard 1 bedroom apartment (40 sq.m, Kshs 3,200,000)',
+            '2-bedroom': '2 bedroom apartment (65 sq.m, Kshs 5,200,000)',
+            '3-bedroom': '3 bedroom apartment (86 sq.m, Kshs 6,880,000)'
         };
         var unitKey = (location.search.match(/[?&]unit=([a-z0-9-]+)/) || [])[1];
         var unit = unitKey && Object.prototype.hasOwnProperty.call(UNITS, unitKey) ? UNITS[unitKey] : null;
