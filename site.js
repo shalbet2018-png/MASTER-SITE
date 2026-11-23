@@ -200,7 +200,7 @@
     });
 
 
-    // Homepage hero slideshow: each photo rolls up to the next in 3D (the theme CSS draws it),
+    // Top-of-page slideshow (home, apartments, maisonettes): each photo rolls up to the next in 3D (the theme CSS draws it),
     // the picture tilts towards the mouse, later slides lazy-load, and it pauses when hidden
     var heroShow = document.querySelector('[data-hero-slideshow]');
     if (heroShow) {

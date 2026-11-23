@@ -378,15 +378,15 @@ a {
     background: var(--volt);
 }
 
-/* Home slideshow in 3D: the picture slowly sways and turns, tilts towards the mouse,
+/* Top-of-page slideshows in 3D (home, apartments, maisonettes): the picture slowly sways and turns, tilts towards the mouse,
    and each photo rolls up to the next like the faces of a turning cube.
    site.js sets --cube-d (half the slideshow height), --tilt-x / --tilt-y and the
    is-entering / is-leaving classes. */
-.hero--home {
+.hero--show {
     perspective: 1500px;
     perspective-origin: 50% 40%;
 }
-.hero--home .hero-slides {
+.hero--show .hero-slides {
     transform-style: preserve-3d;
     scale: 1.14;
     transform: rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
@@ -398,22 +398,22 @@ a {
     50%  { rotate: x 3deg; translate: 0 -1% 0; }
     100% { rotate: y 7deg; translate: 1.5% 0 0; }
 }
-.hero--home .hero-slide {
+.hero--show .hero-slide {
     opacity: 0;
     transform: none;
     transform-origin: 50% 50% calc(var(--cube-d, 320px) * -1);
     transition: none;
     backface-visibility: hidden;
 }
-.hero--home .hero-slide.is-active,
-.hero--home .hero-slide.is-leaving {
+.hero--show .hero-slide.is-active,
+.hero--show .hero-slide.is-leaving {
     opacity: 1;
 }
-.hero--home .hero-slide.is-leaving {
+.hero--show .hero-slide.is-leaving {
     z-index: 1;
     animation: hero-cube-out 1.5s cubic-bezier(0.7, 0, 0.3, 1) forwards;
 }
-.hero--home .hero-slide.is-entering {
+.hero--show .hero-slide.is-entering {
     z-index: 2;
     animation: hero-cube-in 1.5s cubic-bezier(0.7, 0, 0.3, 1) forwards;
 }
@@ -426,17 +426,38 @@ a {
     to   { transform: rotateX(0deg); filter: brightness(1); }
 }
 @media (prefers-reduced-motion: reduce) {
-    .hero--home .hero-slides {
+    .hero--show .hero-slides {
         scale: 1;
         transform: none;
         animation: none;
     }
-    .hero--home .hero-slide.is-leaving,
-    .hero--home .hero-slide.is-entering {
+    .hero--show .hero-slide.is-leaving,
+    .hero--show .hero-slide.is-entering {
         animation: none;
     }
-    .hero--home .hero-slide.is-leaving {
+    .hero--show .hero-slide.is-leaving {
         opacity: 0;
+    }
+}
+/* "Illustrative visual" shows while an artist's impression is on screen */
+.hero > .hero-render-label {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    right: auto;
+    bottom: auto;
+    z-index: 2;
+    opacity: 0;
+    transition: opacity 0.8s ease;
+}
+.hero:has(.hero-slide.is-active[data-illustrative]) > .hero-render-label {
+    opacity: 1;
+}
+@media (max-width: 600px) {
+    .hero > .hero-render-label {
+        top: 52px;
+        left: auto;
+        right: 16px;
     }
 }
 
