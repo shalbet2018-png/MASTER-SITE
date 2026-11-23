@@ -625,9 +625,14 @@ img {
     letter-spacing: 0.06em;
     text-transform: uppercase;
 }
+.price-item {
+    container-type: inline-size;
+    min-width: 0;
+}
 .pricing .price-item strong {
     color: var(--olive);
-    font-size: clamp(21px, 2.2vw, 28px);
+    /* "Kshs 6,880,000" is about 7.3x its font size wide; 13cqi keeps it inside the box */
+    font-size: min(clamp(21px, 2.2vw, 28px), 13cqi);
     font-weight: 800;
     letter-spacing: -0.02em;
     white-space: nowrap;
@@ -862,6 +867,8 @@ html.slides-ready, html.slides-ready body { overflow-x: clip; }
 .slides-ready .slide-piece[data-from="up"]    { --slide-y: -40px; }
 .slides-ready .slide-piece[data-from="down"]  { --slide-y: 40px; }
 .slides-ready .slide-in.is-in { opacity: 1; translate: 0 0; }
+/* Pieces slide in inside their frame, never across its edge */
+.slides-ready .slide-in:not(.slide-piece) { overflow: clip; }
 @media (max-width: 700px) {
     .slides-ready .slide-in[data-from="left"]  { --slide-x: -48px; }
     .slides-ready .slide-in[data-from="right"] { --slide-x: 48px; }
