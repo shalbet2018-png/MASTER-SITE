@@ -66,20 +66,62 @@
         });
     });
 
-    // Fade sections in as they scroll into view
-    var items = document.querySelectorAll('.reveal');
-    if ('IntersectionObserver' in window) {
-        var io = new IntersectionObserver(function (entries) {
+    // Slide frames in as they scroll into view. Each frame comes from the left,
+    // right, top or bottom in turn; inside it, headings and pictures come from
+    // that side and the body text from the opposite side.
+    var main = document.querySelector('main');
+    var calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    document.querySelectorAll('.reveal').forEach(function (el) { el.classList.add('is-visible'); });
+    if (main && !calm && 'IntersectionObserver' in window) {
+        var FRAME = '.content-card, .listing-card, .section-head, .fact, .feature-card, .value-card, .tour-aside, .tour-booking';
+        var HEAD = 'h1, h2, h3, h4, .section-head > p, .fact > strong';
+        var PIC = 'img, picture, figure, video, iframe, .render-figure, .media-frame, .video-lite, .room-tour, .gallery-grid > a';
+        var TEXT = 'p, ul, ol, dl, table, form, blockquote, .btn-row, .price-grid, .jump-links, .fact > span';
+        var OPPOSITE = { left: 'right', right: 'left', up: 'down', down: 'up' };
+        var SIDES = ['left', 'right', 'up', 'down'];
+        var inHero = function (el) { return el.closest('.hero'); };
+
+        var frames = Array.prototype.filter.call(main.querySelectorAll(FRAME), function (f) { return !inHero(f); });
+        // Older .reveal blocks that hold no frame of their own count as frames too
+        main.querySelectorAll('.reveal').forEach(function (r) {
+            if (!r.querySelector(FRAME) && frames.indexOf(r) < 0) frames.push(r);
+        });
+        frames.sort(function (a, b) { return a.compareDocumentPosition(b) & 4 ? -1 : 1; });
+
+        var slide = [];
+        frames.forEach(function (frame, i) {
+            var from = SIDES[i % 4];
+            frame.classList.add('slide-in');
+            frame.dataset.from = from;
+            slide.push(frame);
+            frame.querySelectorAll(HEAD + ',' + PIC + ',' + TEXT).forEach(function (el) {
+                // Only the outermost piece, and only pieces of this frame (not a frame inside it)
+                var up = el.parentElement;
+                while (up && up !== frame) {
+                    if (up.matches(HEAD + ',' + PIC + ',' + TEXT) || up.matches(FRAME)) return;
+                    up = up.parentElement;
+                }
+                var kind = el.matches(HEAD) ? 'head' : el.matches(PIC) ? 'pic' : 'text';
+                el.classList.add('slide-in', 'slide-piece');
+                el.dataset.from = kind === 'text' ? OPPOSITE[from] : from;
+                el.style.setProperty('--slide-delay', kind === 'head' ? '120ms' : kind === 'pic' ? '200ms' : '280ms');
+                slide.push(el);
+            });
+        });
+
+        var slideIo = new IntersectionObserver(function (entries) {
             entries.forEach(function (entry) {
                 if (entry.isIntersecting) {
-                    entry.target.classList.add('is-visible');
-                    io.unobserve(entry.target);
+                    var el = entry.target;
+                    el.classList.add('is-in');
+                    slideIo.unobserve(el);
+                    // Once home, hand the element back to its normal styles (hover effects etc.)
+                    setTimeout(function () { el.classList.remove('slide-in', 'slide-piece', 'is-in'); }, 1400);
                 }
             });
-        }, { rootMargin: '0px 0px -8% 0px' });
-        items.forEach(function (el) { io.observe(el); });
-    } else {
-        items.forEach(function (el) { el.classList.add('is-visible'); });
+        }, { rootMargin: '0px 0px -6% 0px' });
+        document.documentElement.classList.add('slides-ready');
+        slide.forEach(function (el) { slideIo.observe(el); });
     }
 
     // Photo lightbox: links with data-lightbox open in a full-screen viewer
